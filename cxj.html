@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>蔡炫菁的立冬祝福弹窗</title>
+    <title>致蔡炫菁的立冬祝福弹窗（带音乐）</title>
     <style>
         * {
             margin: 0;
@@ -35,6 +35,17 @@
             font-size: 14px;
             opacity: 0.9;
         }
+        audio {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            opacity: 0.8;
+        }
+        audio:hover {
+            opacity: 1;
+        }
         @keyframes popIn {
             0% { transform: scale(0.5); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -46,22 +57,27 @@
     </style>
 </head>
 <body>
+    <audio autoplay loop controls>
+        <source src="lidong-music.mp3" type="audio/mpeg">
+        您的浏览器不支持音频播放，请升级浏览器。
+    </audio>
+
     <script>
-        // 立冬祝福语库（前缀固定“蔡炫菁”）
+        // 专属蔡炫菁的立冬祝福语库（明确指向接收人）
         const blessings = [
-            "蔡炫菁祝您立冬安康，暖身暖心常欢喜！",
-            "蔡炫菁愿您立冬有暖汤，岁岁皆安康，万事顺意！",
-            "蔡炫菁提醒您：立冬添衣，保暖防寒，福气满满！",
-            "蔡炫菁祝您立冬时节，寒意渐浓，温暖相伴，好运连连！",
-            "蔡炫菁愿您立冬有暖阳，生活有茶香，日子暖洋洋！",
-            "蔡炫菁祝您立冬快乐，家人安康，事业顺遂，幸福绵长！",
-            "蔡炫菁提醒您：立冬补冬，养精蓄锐，来年更有精气神！",
-            "蔡炫菁愿您立冬时节，烦恼消散，温暖常伴，笑容常在！",
-            "蔡炫菁祝您立冬安康，三餐温热，四季平安，岁岁无忧！",
-            "蔡炫菁愿您立冬有良人相伴，暖冬不寒，岁月安然！"
+            "致蔡炫菁：立冬安康，愿暖汤暖胃，心意暖心，岁岁常欢喜！",
+            "致蔡炫菁：立冬已至，愿你添衣保暖，福气相伴，万事皆顺意！",
+            "致蔡炫菁：寒来冬始，愿你有暖阳相伴，有良人相依，暖冬不寒！",
+            "致蔡炫菁：立冬快乐！愿三餐温热，四季平安，烦恼消散，笑容常在！",
+            "致蔡炫菁：立冬至，养生时，愿你养精蓄锐，来年元气满满，万事可期！",
+            "致蔡炫菁：冬日伊始，愿你被温柔以待，生活有茶香，日子暖洋洋！",
+            "致蔡炫菁：立冬安康，愿家人常伴，事业顺遂，幸福绵长，岁岁无忧！",
+            "致蔡炫菁：寒风吹不散暖意，愿你立冬时节，温暖常存，好运连连！",
+            "致蔡炫菁：立冬补冬，愿你吃好喝好，身体康健，精神抖擞过暖冬！",
+            "致蔡炫菁：冬日漫漫，愿你心中有光，眼里有笑，每一天都温暖明亮！"
         ];
 
-        // 随机颜色库（背景色+文字色组合，保证对比度）
+        // 随机彩色配色（保证可读性）
         const colorPairs = [
             { bg: "#ff7e5f", text: "#ffffff" },
             { bg: "#4facfe", text: "#ffffff" },
@@ -79,25 +95,19 @@
         function createPopup() {
             const popup = document.createElement("div");
             popup.className = "popup";
-
-            // 随机选择祝福语和颜色
             const randomBlessing = blessings[Math.floor(Math.random() * blessings.length)];
             const randomColor = colorPairs[Math.floor(Math.random() * colorPairs.length)];
-
-            // 设置样式
+            
             popup.style.backgroundColor = randomColor.bg;
             popup.style.color = randomColor.text;
-            popup.style.left = `${Math.random() * 80 + 10}vw`; // 左右10-90vw范围
-            popup.style.top = `${Math.random() * 80 + 10}vh`;  // 上下10-90vh范围
-            popup.style.animationDelay = `${Math.random() * 2}s`; // 随机延迟弹出
-
-            // 设置内容
-            popup.innerHTML = `<h3>立冬祝福</h3><p>${randomBlessing}</p>`;
-
-            // 添加到页面
+            popup.style.left = `${Math.random() * 80 + 10}vw`;
+            popup.style.top = `${Math.random() * 80 + 10}vh`;
+            popup.style.animationDelay = `${Math.random() * 2}s`;
+            
+            popup.innerHTML = `<h3>立冬专属祝福</h3><p>${randomBlessing}</p>`;
             document.body.appendChild(popup);
 
-            // 10秒后自动移除（可选，避免弹窗过多）
+            // 10秒后自动消失
             setTimeout(() => {
                 popup.style.opacity = 0;
                 popup.style.transform = "scale(0.5)";
@@ -106,12 +116,12 @@
             }, 10000);
         }
 
-        // 批量生成弹窗（10个，可调整数量）
+        // 批量弹窗（10个，间隔0.8秒）
         for (let i = 0; i < 10; i++) {
-            setTimeout(createPopup, i * 800); // 每隔800ms生成一个
+            setTimeout(createPopup, i * 800);
         }
 
-        // 点击页面可新增弹窗
+        // 点击新增弹窗
         document.body.addEventListener("click", createPopup);
     </script>
 </body>
