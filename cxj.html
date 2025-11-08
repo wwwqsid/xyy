@@ -15,6 +15,19 @@
             background-color: #f0f8fb;
             height: 100vh;
             overflow: hidden;
+            cursor: pointer; /* 提示可点击 */
+        }
+        /* 播放提示文本 */
+        .play-tip {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: #333;
+            z-index: 500;
+            opacity: 0.8;
+            transition: opacity 0.5s;
         }
         .popup {
             position: fixed;
@@ -57,13 +70,16 @@
     </style>
 </head>
 <body>
-    <audio autoplay loop controls>
+    <!-- 播放提示：首次点击前显示 -->
+    <div class="play-tip">点击页面任意位置播放音乐，开启专属祝福～</div>
+
+    <!-- 音频组件：移除autoplay，通过JS触发播放 -->
+    <audio id="bgm" loop controls>
         <source src="lidong-music.mp3" type="audio/mpeg">
         您的浏览器不支持音频播放，请升级浏览器。
     </audio>
 
     <script>
-        // 专属蔡炫菁的立冬祝福语库（明确指向接收人）
         const blessings = [
             "致蔡炫菁：立冬安康，愿暖汤暖胃，心意暖心，岁岁常欢喜！",
             "致蔡炫菁：立冬已至，愿你添衣保暖，福气相伴，万事皆顺意！",
@@ -77,7 +93,6 @@
             "致蔡炫菁：冬日漫漫，愿你心中有光，眼里有笑，每一天都温暖明亮！"
         ];
 
-        // 随机彩色配色（保证可读性）
         const colorPairs = [
             { bg: "#ff7e5f", text: "#ffffff" },
             { bg: "#4facfe", text: "#ffffff" },
@@ -91,7 +106,28 @@
             { bg: "#16a085", text: "#ffffff" }
         ];
 
-        // 生成随机弹窗
+        // 音乐播放核心逻辑：首次点击触发
+        const bgm = document.getElementById("bgm");
+        const playTip = document.querySelector(".play-tip");
+        let isFirstClick = true; // 标记是否首次点击
+
+        // 点击页面触发音乐播放+隐藏提示
+        document.body.addEventListener("click", function() {
+            if (isFirstClick) {
+                // 触发音乐播放（兼容所有浏览器）
+                bgm.play().catch(err => {
+                    console.log("播放失败，引导用户手动点击音频控件：", err);
+                    alert("请手动点击底部音频控件的播放按钮～");
+                });
+                playTip.style.opacity = 0; // 隐藏提示文本
+                setTimeout(() => playTip.remove(), 500); // 移除提示元素
+                isFirstClick = false; // 仅触发一次
+            }
+            // 点击同时生成弹窗（原有功能保留）
+            createPopup();
+        });
+
+        // 生成弹窗函数（不变）
         function createPopup() {
             const popup = document.createElement("div");
             popup.className = "popup";
@@ -107,7 +143,6 @@
             popup.innerHTML = `<h3>立冬专属祝福</h3><p>${randomBlessing}</p>`;
             document.body.appendChild(popup);
 
-            // 10秒后自动消失
             setTimeout(() => {
                 popup.style.opacity = 0;
                 popup.style.transform = "scale(0.5)";
@@ -116,13 +151,10 @@
             }, 10000);
         }
 
-        // 批量弹窗（10个，间隔0.8秒）
+        // 初始自动生成10个弹窗（不变）
         for (let i = 0; i < 10; i++) {
             setTimeout(createPopup, i * 800);
         }
-
-        // 点击新增弹窗
-        document.body.addEventListener("click", createPopup);
     </script>
 </body>
 </html>
